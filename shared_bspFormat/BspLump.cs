@@ -6,7 +6,7 @@ public abstract class LumpEntry {
 
 public abstract class BspLump {
     public List<LumpEntry> Entries { get; } = new();
-    public byte[] Padding { get; set; }
+    public int Padding { get; protected set; }
 
     public BspLump(byte[] bytes) {
         Parse(bytes);
@@ -20,9 +20,8 @@ public abstract class BspLump {
             writer.Write(entry.ToBytes());
         }
 
-        if (Padding is not null) {
-            writer.Write(Padding);
-        }
+        // Adding padding to be divisible by 4
+        Padding = (int)(4 - writer.BaseStream.Length % 4) % 4;
 
         writer.Close();
         return stream.ToArray();
@@ -30,13 +29,13 @@ public abstract class BspLump {
 
     private void Parse(byte[] bytes) {
         var reader = new BinaryReader(new MemoryStream(bytes));
-        
+
         while (true) {
             var entry = ProvideEntry(reader);
             if (entry is null) {
                 break;
             }
-            
+
             Entries.Add(entry);
         }
     }

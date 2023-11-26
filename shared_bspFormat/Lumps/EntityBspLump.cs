@@ -12,7 +12,7 @@ public sealed class EntityLumpEntry : LumpEntry {
         while (ReadKey(reader)) {
             ReadValue(reader);
         }
-        
+
         RemoveWhitespace(reader);
     }
 
@@ -91,10 +91,15 @@ public sealed class EntityBspLump : BspLump {
         var stream = new MemoryStream();
         var writer = new BinaryWriter(stream);
 
-        writer.Write(base.ToBytes());
+        foreach (var entry in Entries) {
+            writer.Write(entry.ToBytes());
+        }
 
         // add null terminator
-        writer.Write(new byte[] { 0x00 });
+        writer.Write(new byte[1]);
+
+        // Adding padding to be divisible by 4
+        Padding = (int)(4 - writer.BaseStream.Length % 4) % 4;
 
         writer.Close();
         return stream.ToArray();

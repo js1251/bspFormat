@@ -9,8 +9,8 @@ public sealed class BspLumpDictionaryEntry {
     //    char fourCC[4];   // lump ident code
     //};
     public int LumpNumber { get; }
-    public int Offset { get; }
-    public int Length { get; }
+    public int Offset { get; set; }
+    public int Length { get; set; }
     public int Version { get; }
     public char[] FourCC { get; } = new char[4];
 
@@ -51,21 +51,25 @@ public class BspLumpDictionary {
     public BspLumpDictionary(BinaryReader reader) {
         for (var i = 0; i < _dictionaryEntries.Length; i++) {
             _dictionaryEntries[i] = new BspLumpDictionaryEntry(reader, i);
-        }
-
-        for (var i = 0; i < _lumpOrder.Length; i++) {
             _lumpOrder[i] = i;
         }
 
         // sort lumpOrder based on offsets of _dictionaryEntries
-        Array.Sort(_lumpOrder, (a, b) => _dictionaryEntries[a].Offset.CompareTo(_dictionaryEntries[b].Offset));
+        Array.Sort(_lumpOrder, (a, b) => {
+            var headerA = _dictionaryEntries[a];
+            var headerB = _dictionaryEntries[b];
+
+            var result = headerA.Offset.CompareTo(headerB.Offset);
+
+            return result is not 0 ? result : b.CompareTo(a);
+        });
     }
 
-    public BspLumpDictionaryEntry GetLumpHeader(int lumpNumber) {
-        return _dictionaryEntries[lumpNumber];
+    public BspLumpDictionaryEntry GetLumpHeaderOfLumpWithId(int lumpId) {
+        return _dictionaryEntries[lumpId];
     }
 
-    public int GetLumpNumberOfLumpAtPosition(int position) {
+    public int GetLumpIdOfLumpAtPosition(int position) {
         return _lumpOrder[position];
     }
 

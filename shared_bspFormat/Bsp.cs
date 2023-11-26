@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat;
 
-internal static class LumpMap {
+public static class LumpMap {
     private static readonly Dictionary<int, Type> _map = new() {
         /* 00 */ { EntityBspLump.ID, typeof(EntityBspLump) },
         /* 01 */
@@ -70,7 +70,7 @@ internal static class LumpMap {
         /* 63 */
     };
 
-    internal static BspLump GetInstance(int index, byte[] bytes) {
+    public static BspLump GetInstance(int index, byte[] bytes) {
         if (!_map.TryGetValue(index, out var type)) {
             return new DefaultBspLump(bytes);
         }
@@ -107,43 +107,52 @@ public class Bsp {
         writer.Write(BspHeader.ToBytes());
 
         for (var i = 0; i < NUMBER_OF_LUMPS; i++) {
-            var lumpNumber = BspHeader.BspLumpDictionary.GetLumpNumberOfLumpAtPosition(i);
+            var lumpNumber = BspHeader.BspLumpDictionary.GetLumpIdOfLumpAtPosition(i);
             writer.Write(Lumps[lumpNumber].ToBytes());
+            writer.Write(new byte[Lumps[lumpNumber].Padding]);
         }
 
         writer.Close();
         return stream.ToArray();
     }
 
+    public void RegenerateHeader() {
+        var offset = 0;
+        var length = BspHeader.ToBytes().Length;
+        var padding = 0;
+
+        for (var i = 0; i < NUMBER_OF_LUMPS; i++) {
+            var currentLumpId = BspHeader.BspLumpDictionary.GetLumpIdOfLumpAtPosition(i);
+            var currentLumpHeader = BspHeader.BspLumpDictionary.GetLumpHeaderOfLumpWithId(currentLumpId);
+            var currentLump = Lumps[currentLumpId];
+
+            var currentLength = currentLump.ToBytes().Length;
+
+            if (currentLength is not 0) {
+                offset += length + padding;
+                padding = 0;
+            }
+
+            var currentOffset = offset;
+
+            currentLumpHeader.Offset = currentOffset;
+            currentLumpHeader.Length = currentLength;
+
+            if (currentLength is not 0) {
+                padding = currentLump.Padding;
+                length = currentLength;
+            }
+        }
+    }
+
     private BspLump[] CreateLumps(BinaryReader reader) {
         var lumps = new BspLump[NUMBER_OF_LUMPS];
         for (var i = 0; i < NUMBER_OF_LUMPS; i++) {
-            var currentLumpNumber = BspHeader.BspLumpDictionary.GetLumpNumberOfLumpAtPosition(i);
-            var currentLumpHeader = BspHeader.BspLumpDictionary.GetLumpHeader(currentLumpNumber);
+            var currentLumpId = BspHeader.BspLumpDictionary.GetLumpIdOfLumpAtPosition(i);
+            var currentLumpHeader = BspHeader.BspLumpDictionary.GetLumpHeaderOfLumpWithId(currentLumpId);
 
-            // read next lump
-            lumps[currentLumpNumber] = LumpMap.GetInstance(currentLumpHeader.LumpNumber, reader.ReadBytes(currentLumpHeader.Length));
-
-            long difference;
-            var currentReadOffset = reader.BaseStream.Position;
-            if (i < NUMBER_OF_LUMPS - 1) {
-                var nextLumpNumber = BspHeader.BspLumpDictionary.GetLumpNumberOfLumpAtPosition(i + 1);
-                var nextLumpHeader = BspHeader.BspLumpDictionary.GetLumpHeader(nextLumpNumber);
-
-                var nextLumpLength = nextLumpHeader.Length;
-                // ignore empty lumps
-                if (nextLumpLength is 0) {
-                    continue;
-                }
-
-                difference = nextLumpHeader.Offset - currentReadOffset;
-            } else {
-                difference = reader.BaseStream.Length - reader.BaseStream.Position;
-            }
-
-            if (difference is not 0) {
-                lumps[currentLumpNumber].Padding = reader.ReadBytes((int)difference);
-            }
+            reader.BaseStream.Position = currentLumpHeader.Offset;
+            lumps[currentLumpId] = LumpMap.GetInstance(currentLumpHeader.LumpNumber, reader.ReadBytes(currentLumpHeader.Length));
         }
 
         return lumps;
