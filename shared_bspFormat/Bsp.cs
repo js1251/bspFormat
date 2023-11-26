@@ -39,7 +39,7 @@ public static class LumpMap {
         /* 32 */
         /* 33 */
         /* 34 */
-        /* 35 */
+        /* 35 */ { GameLump.ID, typeof(GameLump) },
         /* 36 */
         /* 37 */
         /* 38 */
@@ -134,6 +134,25 @@ public class Bsp {
             }
 
             var currentOffset = offset;
+
+            // gamelump has offsets relative to entire bsp
+            if (currentLumpId is GameLump.ID) {
+                if (currentLump is not GameLump gameLump) {
+                    throw new InvalidCastException("Could not cast to GameLump!");
+                }
+
+                if (gameLump.Entries[0] is not GameLumpEntry gameLumpEntry) {
+                    throw new InvalidCastException("Could not convert to GameLumpInstance");
+                }
+
+                // int for gamelumpcount + header length for each gamelump instance
+                var gameLumpHeaderLength = sizeof(int) + gameLumpEntry.GameLumps.Sum(instance => instance.ToBytes().Length);
+                var instanceLength = 0;
+                foreach (var instance in gameLumpEntry.GameLumps) {
+                    instance.FileOffset = offset + gameLumpHeaderLength + instanceLength;
+                    instanceLength = instance.FileLength;
+                }
+            }
 
             currentLumpHeader.Offset = currentOffset;
             currentLumpHeader.Length = currentLength;
