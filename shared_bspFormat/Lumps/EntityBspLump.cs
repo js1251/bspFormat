@@ -5,6 +5,7 @@ namespace shared_bspFormat.Lumps;
 public sealed class EntityLumpEntry : LumpEntry {
     public List<string> Keys { get; } = new();
     public List<string> Values { get; } = new();
+    public EntityLumpEntry() { }
 
     public EntityLumpEntry(BinaryReader reader) {
         reader.ReadChar(); // opening brace
