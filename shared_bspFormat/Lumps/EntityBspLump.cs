@@ -79,6 +79,10 @@ public sealed class EntityBspLump : BspLump {
     public EntityBspLump(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
+        if (reader.BaseStream.Length is 0) {
+            return null;
+        }
+
         var nextChar = reader.ReadChar();
         if (nextChar is '\0') {
             return null;
