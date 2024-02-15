@@ -97,7 +97,11 @@ public sealed class EntityBspLump : BspLump {
         var writer = new BinaryWriter(stream);
 
         foreach (var entry in Entries) {
-            writer.Write(entry.ToBytes());
+            if (entry is not EntityLumpEntry entityEntry) {
+                throw new Exception("Invalid lump type");
+            }
+
+            writer.Write(entityEntry.ToBytes());
         }
 
         // add null terminator

@@ -44,9 +44,9 @@ public static class LumpMap {
         /* 37 */
         /* 38 */
         /* 39 */
-        /* 40 */
+        /* 40 */ // { PakfileBspLump.ID, typeof(PakfileBspLump) },
         /* 41 */
-        /* 42 */
+        /* 42 */ { CubemapBspLump.ID, typeof(CubemapBspLump) },
         /* 43 */ { TextureStringDataBspLump.ID, typeof(TextureStringDataBspLump) },
         /* 44 */
         /* 45 */
