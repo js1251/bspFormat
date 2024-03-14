@@ -21,6 +21,7 @@ public abstract class BspLump {
         }
 
         // Adding padding to be divisible by 4
+        // TODO: this is bad. If ToBytes is never called, Padding is not initialized
         Padding = (int)(4 - writer.BaseStream.Length % 4) % 4;
 
         writer.Close();
