@@ -107,9 +107,6 @@ public sealed class EntityBspLump : BspLump {
         // add null terminator
         writer.Write(new byte[1]);
 
-        // Adding padding to be divisible by 4
-        Padding = (int)(4 - writer.BaseStream.Length % 4) % 4;
-
         writer.Close();
         return stream.ToArray();
     }

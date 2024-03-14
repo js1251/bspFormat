@@ -6,10 +6,13 @@ public abstract class LumpEntry {
 
 public abstract class BspLump {
     public List<LumpEntry> Entries { get; } = new();
-    public int Padding { get; protected set; }
+    public int Padding { get; set; }
 
     public BspLump(byte[] bytes) {
         Parse(bytes);
+
+        Padding = (4 - ToBytes().Length % 4) % 4;
+
     }
 
     public virtual byte[] ToBytes() {
@@ -19,10 +22,6 @@ public abstract class BspLump {
         foreach (var entry in Entries) {
             writer.Write(entry.ToBytes());
         }
-
-        // Adding padding to be divisible by 4
-        // TODO: this is bad. If ToBytes is never called, Padding is not initialized
-        Padding = (int)(4 - writer.BaseStream.Length % 4) % 4;
 
         writer.Close();
         return stream.ToArray();

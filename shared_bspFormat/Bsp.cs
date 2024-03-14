@@ -107,9 +107,9 @@ public class Bsp {
         writer.Write(BspHeader.ToBytes());
 
         for (var i = 0; i < NUMBER_OF_LUMPS; i++) {
-            var lumpNumber = BspHeader.BspLumpDictionary.GetLumpIdOfLumpAtPosition(i);
-            writer.Write(Lumps[lumpNumber].ToBytes());
-            writer.Write(new byte[Lumps[lumpNumber].Padding]);
+            var lumpId = BspHeader.BspLumpDictionary.GetLumpIdOfLumpAtPosition(i);
+            writer.Write(Lumps[lumpId].ToBytes());
+            writer.Write(new byte[Lumps[lumpId].Padding]);
         }
 
         writer.Close();
