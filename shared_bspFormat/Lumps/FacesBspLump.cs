@@ -110,7 +110,7 @@ public sealed class FacesLumpEntry : LumpEntry {
     }
 }
 
-public sealed class FacesBspLump : BspLump {
+public class FacesBspLump : BspLump {
     public const int ID = 7;
     public FacesBspLump(byte[] bytes) : base(bytes) { }
 

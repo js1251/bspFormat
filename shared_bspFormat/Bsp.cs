@@ -31,7 +31,7 @@ public static class LumpMap {
         /* 24 */
         /* 25 */
         /* 26 */
-        /* 27 */
+        /* 27 */ { OriginalFacesBspLump.ID, typeof(OriginalFacesBspLump) },
         /* 28 */
         /* 29 */
         /* 30 */
