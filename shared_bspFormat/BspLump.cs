@@ -15,7 +15,6 @@ public abstract class BspLump {
         Parse(bytes);
 
         Padding = (4 - ToBytes().Length % 4) % 4;
-
     }
 
     public virtual byte[] ToBytes() {
