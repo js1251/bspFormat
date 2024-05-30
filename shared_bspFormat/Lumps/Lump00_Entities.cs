@@ -5,12 +5,12 @@ using System.Text;
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class EntityLumpEntry : LumpEntry {
+public sealed class Lump00_EntitiesEntry : LumpEntry {
     public List<string> Keys { get; } = new();
     public List<string> Values { get; } = new();
-    public EntityLumpEntry() { }
+    public Lump00_EntitiesEntry() { }
 
-    public EntityLumpEntry(BinaryReader reader) {
+    public Lump00_EntitiesEntry(BinaryReader reader) {
         reader.ReadChar(); // opening brace
 
         while (ReadKey(reader)) {
@@ -77,9 +77,9 @@ public sealed class EntityLumpEntry : LumpEntry {
     }
 }
 
-public sealed class EntityBspLump : BspLump {
+public sealed class Lump00_Entities : BspLump {
     public const int ID = 0;
-    public EntityBspLump(byte[] bytes) : base(bytes) { }
+    public Lump00_Entities(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         if (reader.BaseStream.Length is 0) {
@@ -92,7 +92,7 @@ public sealed class EntityBspLump : BspLump {
         }
 
         reader.BaseStream.Seek(-1, SeekOrigin.Current);
-        return new EntityLumpEntry(reader);
+        return new Lump00_EntitiesEntry(reader);
     }
 
     public override byte[] ToBytes() {
@@ -100,7 +100,7 @@ public sealed class EntityBspLump : BspLump {
         var writer = new BinaryWriter(stream);
 
         foreach (var entry in Entries) {
-            if (entry is not EntityLumpEntry entityEntry) {
+            if (entry is not Lump00_EntitiesEntry entityEntry) {
                 throw new Exception("Invalid lump type");
             }
 

@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class CubemapLumpEntry : LumpEntry {
+public sealed class Lump42_CubemapsEntry : LumpEntry {
     // struct dcubemapsample_t
     // {
     //     int origin[3];    // position of light snapped to the nearest integer
@@ -12,7 +12,7 @@ public sealed class CubemapLumpEntry : LumpEntry {
     public int[] Origin { get; set; } = new int[3];
     public int Size { get; set; }
 
-    public CubemapLumpEntry(BinaryReader reader) {
+    public Lump42_CubemapsEntry(BinaryReader reader) {
         for (var i = 0; i < Origin.Length; i++) {
             Origin[i] = reader.ReadInt32();
         }
@@ -35,12 +35,12 @@ public sealed class CubemapLumpEntry : LumpEntry {
     }
 }
 
-public sealed class CubemapBspLump : BspLump {
+public sealed class Lump42_Cubemaps : BspLump {
     public const int ID = 42;
-    public CubemapBspLump(byte[] bytes) : base(bytes) { }
+    public Lump42_Cubemaps(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-        return bytesToRead is 0 ? null : new CubemapLumpEntry(reader);
+        return bytesToRead is 0 ? null : new Lump42_CubemapsEntry(reader);
     }
 }

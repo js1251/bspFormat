@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class FacesLumpEntry : LumpEntry {
+public sealed class Lump07_FacesEntry : LumpEntry {
     //struct dface_t
     //{
     //    unsigned short planenum;            // the plane number
@@ -42,7 +42,7 @@ public sealed class FacesLumpEntry : LumpEntry {
     public ushort FirstPrimID { get; set; }
     public uint SmoothingGroups { get; set; }
 
-    public FacesLumpEntry(BinaryReader reader) {
+    public Lump07_FacesEntry(BinaryReader reader) {
         PlaneNum = reader.ReadUInt16();
         Side = reader.ReadByte();
         OnNode = reader.ReadByte();
@@ -112,12 +112,12 @@ public sealed class FacesLumpEntry : LumpEntry {
     }
 }
 
-public class FacesBspLump : BspLump {
+public class Lump07_Faces : BspLump {
     public const int ID = 7;
-    public FacesBspLump(byte[] bytes) : base(bytes) { }
+    public Lump07_Faces(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-        return bytesToRead is 0 ? null : new FacesLumpEntry(reader);
+        return bytesToRead is 0 ? null : new Lump07_FacesEntry(reader);
     }
 }

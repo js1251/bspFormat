@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class BrushSideLumpEntry : LumpEntry {
+public sealed class Lump19_BrushSidesEntry : LumpEntry {
     //struct <code>dbrushside_t</code>
     //{
     //    unsigned short planenum;     // facing out of the leaf
@@ -16,7 +16,7 @@ public sealed class BrushSideLumpEntry : LumpEntry {
     public short DispInfo { get; set; }
     public short Bevel { get; set; }
 
-    public BrushSideLumpEntry(BinaryReader reader) {
+    public Lump19_BrushSidesEntry(BinaryReader reader) {
         PlaneNum = reader.ReadUInt16();
         TexInfo = reader.ReadInt16();
         DispInfo = reader.ReadInt16();
@@ -38,12 +38,12 @@ public sealed class BrushSideLumpEntry : LumpEntry {
     }
 }
 
-public sealed class BrushSideBspLump : BspLump {
+public sealed class Lump19_BrushSides : BspLump {
     public const int ID = 19;
-    public BrushSideBspLump(byte[] bytes) : base(bytes) { }
+    public Lump19_BrushSides(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-        return bytesToRead is 0 ? null : new BrushSideLumpEntry(reader);
+        return bytesToRead is 0 ? null : new Lump19_BrushSidesEntry(reader);
     }
 }

@@ -4,11 +4,11 @@ using System.IO.Compression;
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class PakfileLumpEntry : LumpEntry {
+public sealed class Lump40_PakfileEntry : LumpEntry {
     public string FullName { get; set; }
     public byte[] Data { get; set; }
 
-    public PakfileLumpEntry(ZipArchiveEntry entry) {
+    public Lump40_PakfileEntry(ZipArchiveEntry entry) {
         FullName = entry.FullName;
 
         var readStream = entry.Open();
@@ -25,13 +25,13 @@ public sealed class PakfileLumpEntry : LumpEntry {
     }
 }
 
-public sealed class PakfileBspLump : BspLump {
+public sealed class Lump40_Pakfile : BspLump {
     public const int ID = 40;
 
     private ZipArchive _archive;
     private int _currentReadIndex;
 
-    public PakfileBspLump(byte[] bytes) : base(bytes) { }
+    public Lump40_Pakfile(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         if (_archive is null) {
@@ -45,7 +45,7 @@ public sealed class PakfileBspLump : BspLump {
         var entry = _archive.Entries[_currentReadIndex];
         _currentReadIndex++;
 
-        return new PakfileLumpEntry(entry);
+        return new Lump40_PakfileEntry(entry);
     }
 
     public override byte[] ToBytes() {
@@ -53,7 +53,7 @@ public sealed class PakfileBspLump : BspLump {
 
         using (var archive = new ZipArchive(stream, ZipArchiveMode.Create, true)) {
             foreach (var entry in Entries) {
-                if (entry is not PakfileLumpEntry pakfileEntry) {
+                if (entry is not Lump40_PakfileEntry pakfileEntry) {
                     throw new Exception();
                 }
 

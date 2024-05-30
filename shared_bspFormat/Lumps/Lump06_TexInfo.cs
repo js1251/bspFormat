@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class TextureInfoEntry : LumpEntry {
+public sealed class Lump06_TexInfoEntry : LumpEntry {
     //struct texinfo_t
     //{
     //    float textureVecs[2][4];  // [s/t][xyz offset]
@@ -16,7 +16,7 @@ public sealed class TextureInfoEntry : LumpEntry {
     public int Flags { get; set; }
     public int TexData { get; set; }
 
-    public TextureInfoEntry(BinaryReader reader) {
+    public Lump06_TexInfoEntry(BinaryReader reader) {
         for (var i = 0; i < 2; i++) {
             TextureVecs[i] = new float[4];
             LightmapVecs[i] = new float[4];
@@ -50,12 +50,12 @@ public sealed class TextureInfoEntry : LumpEntry {
     }
 }
 
-public sealed class TextInfoBspLump : BspLump {
+public sealed class Lump06_TexInfo : BspLump {
     public const int ID = 6;
-    public TextInfoBspLump(byte[] bytes) : base(bytes) { }
+    public Lump06_TexInfo(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-        return bytesToRead is 0 ? null : new TextureInfoEntry(reader);
+        return bytesToRead is 0 ? null : new Lump06_TexInfoEntry(reader);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class GameLumpInstance : LumpEntry {
+public sealed class Lump35_GameLumpInstance : LumpEntry {
     /*
      * struct dgamelump_t
      * {
@@ -21,7 +21,7 @@ public sealed class GameLumpInstance : LumpEntry {
     public int FileLength { get; set; }
     public byte[] Data { get; set; }
 
-    public GameLumpInstance(BinaryReader reader) {
+    public Lump35_GameLumpInstance(BinaryReader reader) {
         Id = reader.ReadInt32();
         Flags = reader.ReadUInt16();
         Version = reader.ReadUInt16();
@@ -55,14 +55,14 @@ public sealed class GameLumpEntry : LumpEntry {
      */
 
     public int LumpCount { get; set; }
-    public GameLumpInstance[] GameLumps { get; set; }
+    public Lump35_GameLumpInstance[] GameLumps { get; set; }
 
     public GameLumpEntry(BinaryReader reader) {
         LumpCount = reader.ReadInt32();
 
-        GameLumps = new GameLumpInstance[LumpCount];
+        GameLumps = new Lump35_GameLumpInstance[LumpCount];
         for (var i = 0; i < LumpCount; i++) {
-            GameLumps[i] = new GameLumpInstance(reader);
+            GameLumps[i] = new Lump35_GameLumpInstance(reader);
         }
 
         // read the actual lump data
@@ -91,10 +91,10 @@ public sealed class GameLumpEntry : LumpEntry {
     }
 }
 
-public sealed class GameLump : BspLump {
+public sealed class Lump35_GameLump : BspLump {
     public const int ID = 35;
 
-    public GameLump(byte[] bytes) : base(bytes) { }
+    public Lump35_GameLump(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);

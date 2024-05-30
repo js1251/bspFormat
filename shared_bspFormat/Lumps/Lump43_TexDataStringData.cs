@@ -3,10 +3,10 @@ using System.Text;
 
 namespace shared_bspFormat.Lumps;
 
-public class TextureStringDataLumpEntry : LumpEntry {
+public class Lump43_TexDataStringDataEntry : LumpEntry {
     public string MaterialName { get; }
 
-    public TextureStringDataLumpEntry(string materialName) {
+    public Lump43_TexDataStringDataEntry(string materialName) {
         MaterialName = materialName;
     }
 
@@ -24,9 +24,9 @@ public class TextureStringDataLumpEntry : LumpEntry {
     }
 }
 
-public class TextureStringDataBspLump : BspLump {
+public class Lump43_TexDataStringData : BspLump {
     public const int ID = 43;
-    public TextureStringDataBspLump(byte[] bytes) : base(bytes) { }
+    public Lump43_TexDataStringData(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         if (reader.BaseStream.Position >= reader.BaseStream.Length - 1) {
@@ -48,6 +48,6 @@ public class TextureStringDataBspLump : BspLump {
         }
 
         // convert the byte buffer to a string
-        return new TextureStringDataLumpEntry(Encoding.ASCII.GetString(stream.ToArray()));
+        return new Lump43_TexDataStringDataEntry(Encoding.ASCII.GetString(stream.ToArray()));
     }
 }

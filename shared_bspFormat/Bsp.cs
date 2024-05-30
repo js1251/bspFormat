@@ -8,14 +8,14 @@ namespace shared_bspFormat;
 
 public static class LumpMap {
     private static readonly Dictionary<int, Type> _map = new() {
-        /* 00 */ { EntityBspLump.ID, typeof(EntityBspLump) },
+        /* 00 */ { Lump00_Entities.ID, typeof(Lump00_Entities) },
         /* 01 */
-        /* 02 */
+        /* 02 */ { Lump02_TexData.ID, typeof(Lump02_TexData) },
         /* 03 */
         /* 04 */
         /* 05 */
-        /* 06 */ { TextInfoBspLump.ID, typeof(TextInfoBspLump) },
-        /* 07 */ { FacesBspLump.ID, typeof(FacesBspLump) },
+        /* 06 */ { Lump06_TexInfo.ID, typeof(Lump06_TexInfo) },
+        /* 07 */ { Lump07_Faces.ID, typeof(Lump07_Faces) },
         /* 08 */
         /* 09 */
         /* 10 */
@@ -26,8 +26,8 @@ public static class LumpMap {
         /* 15 */
         /* 16 */
         /* 17 */
-        /* 18 */ { BrushBspLump.ID, typeof(BrushBspLump) },
-        /* 19 */ { BrushSideBspLump.ID, typeof(BrushSideBspLump) },
+        /* 18 */ { Lump18_Brushes.ID, typeof(Lump18_Brushes) },
+        /* 19 */ { Lump19_BrushSides.ID, typeof(Lump19_BrushSides) },
         /* 20 */
         /* 21 */
         /* 22 */
@@ -35,7 +35,7 @@ public static class LumpMap {
         /* 24 */
         /* 25 */
         /* 26 */
-        /* 27 */ { OriginalFacesBspLump.ID, typeof(OriginalFacesBspLump) },
+        /* 27 */ { Lump27_OriginalFaces.ID, typeof(Lump27_OriginalFaces) },
         /* 28 */
         /* 29 */
         /* 30 */
@@ -43,16 +43,16 @@ public static class LumpMap {
         /* 32 */
         /* 33 */
         /* 34 */
-        /* 35 */ { GameLump.ID, typeof(GameLump) },
+        /* 35 */ { Lump35_GameLump.ID, typeof(Lump35_GameLump) },
         /* 36 */
         /* 37 */
         /* 38 */
         /* 39 */
-        /* 40 */ // { PakfileBspLump.ID, typeof(PakfileBspLump) },
+        /* 40 */ // { Lump40_Pakfile.ID, typeof(Lump40_Pakfile) },
         /* 41 */
-        /* 42 */ { CubemapBspLump.ID, typeof(CubemapBspLump) },
-        /* 43 */ { TextureStringDataBspLump.ID, typeof(TextureStringDataBspLump) },
-        /* 44 */
+        /* 42 */ { Lump42_Cubemaps.ID, typeof(Lump42_Cubemaps) },
+        /* 43 */ { Lump43_TexDataStringData.ID, typeof(Lump43_TexDataStringData) },
+        /* 44 */ { Lump44_TexDataStringTable.ID, typeof(Lump44_TexDataStringTable) },
         /* 45 */
         /* 46 */
         /* 47 */
@@ -140,13 +140,13 @@ public class Bsp {
             var currentOffset = offset;
 
             // gamelump has offsets relative to entire bsp
-            if (currentLumpId is GameLump.ID) {
-                if (currentLump is not GameLump gameLump) {
-                    throw new InvalidCastException("Could not cast to GameLump!");
+            if (currentLumpId is Lump35_GameLump.ID) {
+                if (currentLump is not Lump35_GameLump gameLump) {
+                    throw new InvalidCastException("Could not cast to Lump35_GameLump!");
                 }
 
                 if (gameLump.Entries[0] is not GameLumpEntry gameLumpEntry) {
-                    throw new InvalidCastException("Could not convert to GameLumpInstance");
+                    throw new InvalidCastException("Could not convert to Lump35_GameLumpInstance");
                 }
 
                 // int for gamelumpcount + header length for each gamelump instance

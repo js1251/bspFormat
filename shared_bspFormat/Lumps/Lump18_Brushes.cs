@@ -2,7 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
-public sealed class BrushLumpEntry : LumpEntry {
+public sealed class Lump18_BrushesEntry : LumpEntry {
     //struct dbrush_t
     //{
     //    int firstside;     // first brushside
@@ -13,7 +13,7 @@ public sealed class BrushLumpEntry : LumpEntry {
     public int NumSides { get; set; }
     public int Contents { get; set; }
 
-    public BrushLumpEntry(BinaryReader reader) {
+    public Lump18_BrushesEntry(BinaryReader reader) {
         FirstSide = reader.ReadInt32();
         NumSides = reader.ReadInt32();
         Contents = reader.ReadInt32();
@@ -33,12 +33,12 @@ public sealed class BrushLumpEntry : LumpEntry {
     }
 }
 
-public sealed class BrushBspLump : BspLump {
+public sealed class Lump18_Brushes : BspLump {
     public const int ID = 18;
-    public BrushBspLump(byte[] bytes) : base(bytes) { }
+    public Lump18_Brushes(byte[] bytes) : base(bytes) { }
 
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
-        return bytesToRead is 0 ? null : new BrushLumpEntry(reader);
+        return bytesToRead is 0 ? null : new Lump18_BrushesEntry(reader);
     }
 }
