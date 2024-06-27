@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace shared_bspFormat;
 
@@ -30,7 +31,7 @@ public abstract class BspLump {
     }
 
     private void Parse(byte[] bytes) {
-        var reader = new BinaryReader(new MemoryStream(bytes));
+        var reader = new BinaryReader(new MemoryStream(bytes), Encoding.GetEncoding("ISO-8859-1"));
 
         while (true) {
             var entry = ProvideEntry(reader);
