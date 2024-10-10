@@ -145,16 +145,25 @@ public class Bsp {
                     throw new InvalidCastException("Could not cast to Lump35_GameLump!");
                 }
 
+                // the game lump always has only one entry (the gamelump format itself)
                 if (gameLump.Entries[0] is not GameLumpEntry gameLumpEntry) {
                     throw new InvalidCastException("Could not convert to Lump35_GameLumpInstance");
                 }
+
+                // the game lump is structured as followed:
+                //
+                // int count
+                // gamelumpinstance[]
+                // data
+                //
+                // comparable to how the bsp is structured (header, lumpdictionary, lumps)
 
                 // int for gamelumpcount + header length for each gamelump instance
                 var gameLumpHeaderLength = sizeof(int) + gameLumpEntry.GameLumps.Sum(instance => instance.ToBytes().Length);
                 var instanceLength = 0;
                 foreach (var instance in gameLumpEntry.GameLumps) {
                     instance.FileOffset = offset + gameLumpHeaderLength + instanceLength;
-                    instanceLength = instance.FileLength;
+                    instanceLength += instance.FileLength;
                 }
             }
 
