@@ -2,6 +2,7 @@
 
 namespace shared_bspFormat.Lumps;
 
+// TODO: Refactor to remove 3 tiered nested classes. Have LumpCount on the GameLumpEntry class and use Entries for the game lumps.
 public sealed class Lump35_GameLumpInstance : LumpEntry {
     /*
      * struct dgamelump_t
@@ -19,6 +20,8 @@ public sealed class Lump35_GameLumpInstance : LumpEntry {
     public ushort Version { get; set; }
     public int FileOffset { get; set; }
     public int FileLength { get; set; }
+
+    // not actually on the format itself (??)
     public byte[] Data { get; set; }
 
     public Lump35_GameLumpInstance(BinaryReader reader) {
@@ -99,5 +102,14 @@ public sealed class Lump35_GameLump : BspLump {
     protected override LumpEntry ProvideEntry(BinaryReader reader) {
         var bytesToRead = (int)(reader.BaseStream.Length - reader.BaseStream.Position);
         return bytesToRead is 0 ? null : new GameLumpEntry(reader);
+    }
+
+    public override string ToString() {
+        var result = "";
+        foreach (var gameLump in (Entries[0] as GameLumpEntry).GameLumps) {
+            result += $"Id: {gameLump.Id}, Flags: {gameLump.Flags}, Version: {gameLump.Version}, FileOffset: {gameLump.FileOffset}, FileLength: {gameLump.FileLength}, Datalength: {gameLump.Data.Length}\n";
+        }
+
+        return result;
     }
 }
