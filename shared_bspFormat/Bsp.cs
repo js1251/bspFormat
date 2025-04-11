@@ -9,19 +9,19 @@ namespace shared_bspFormat;
 public static class LumpMap {
     private static readonly Dictionary<int, Type> _map = new() {
         /* 00 */ { Lump00_Entities.ID, typeof(Lump00_Entities) },
-        /* 01 */
+        /* 01 */ { Lump01_Planes.ID, typeof(Lump01_Planes) },
         /* 02 */ { Lump02_TexData.ID, typeof(Lump02_TexData) },
-        /* 03 */
+        /* 03 */ { Lump03_Vertex.ID, typeof(Lump03_Vertex) },
         /* 04 */
-        /* 05 */
+        /* 05 */ { Lump05_Nodes.ID, typeof(Lump05_Nodes) },
         /* 06 */ { Lump06_TexInfo.ID, typeof(Lump06_TexInfo) },
         /* 07 */ { Lump07_Faces.ID, typeof(Lump07_Faces) },
         /* 08 */
         /* 09 */
         /* 10 */
         /* 11 */
-        /* 12 */
-        /* 13 */
+        /* 12 */ { Lump12_Edge.ID, typeof(Lump12_Edge) },
+        /* 13 */ { Lump13_SurfEdge.ID, typeof(Lump13_SurfEdge) },
         /* 14 */
         /* 15 */
         /* 16 */
