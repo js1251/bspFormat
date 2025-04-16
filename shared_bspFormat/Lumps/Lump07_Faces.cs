@@ -28,10 +28,10 @@ public sealed class Lump07_FacesEntry : LumpEntry {
     public byte Side { get; set; }
     public byte OnNode { get; set; }
     public int FirstEdge { get; set; }
-    public ushort NumEdges { get; set; }
-    public ushort TexInfo { get; set; }
-    public ushort DispInfo { get; set; }
-    public ushort SurfaceFogVolumeID { get; set; }
+    public short NumEdges { get; set; }
+    public short TexInfo { get; set; }
+    public short DispInfo { get; set; }
+    public short SurfaceFogVolumeID { get; set; }
     public byte[] Styles { get; set; } = new byte[4];
     public int LightOfs { get; set; }
     public float Area { get; set; }
@@ -47,10 +47,10 @@ public sealed class Lump07_FacesEntry : LumpEntry {
         Side = reader.ReadByte();
         OnNode = reader.ReadByte();
         FirstEdge = reader.ReadInt32();
-        NumEdges = reader.ReadUInt16();
-        TexInfo = reader.ReadUInt16();
-        DispInfo = reader.ReadUInt16();
-        SurfaceFogVolumeID = reader.ReadUInt16();
+        NumEdges = reader.ReadInt16();
+        TexInfo = reader.ReadInt16();
+        DispInfo = reader.ReadInt16();
+        SurfaceFogVolumeID = reader.ReadInt16();
 
         for (var i = 0; i < Styles.Length; i++) {
             Styles[i] = reader.ReadByte();
