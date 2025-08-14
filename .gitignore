@@ -276,3 +276,5 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
+
+shared_bspFormat/7zip/

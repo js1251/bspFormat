@@ -15,7 +15,7 @@ public sealed class BspLumpDictionaryEntry {
     public int Offset { get; set; }
     public int Length { get; set; }
     public int Version { get; }
-    public char[] FourCC { get; } = new char[4];
+    public char[] FourCC { get; set; } = new char[4];
 
     public BspLumpDictionaryEntry(BinaryReader reader, int lumpNumber) {
         Offset = reader.ReadInt32();
@@ -44,6 +44,10 @@ public sealed class BspLumpDictionaryEntry {
         writer.Close();
 
         return stream.ToArray();
+    }
+
+    public bool IsLZMACompressed() {
+        return new string(FourCC) == "LZMA";
     }
 }
 

@@ -101,6 +101,9 @@ public class Bsp {
         BspHeader = new BspHeader(reader);
         Lumps = CreateLumps(reader);
 
+        // if the bsp was compressed with LZMA, the lump sized will change after parsing
+        RegenerateHeader();
+
         reader.Close();
     }
 
@@ -184,9 +187,36 @@ public class Bsp {
             var currentLumpHeader = BspHeader.BspLumpDictionary.GetLumpHeaderOfLumpWithId(currentLumpId);
 
             reader.BaseStream.Position = currentLumpHeader.Offset;
-            lumps[currentLumpId] = LumpMap.GetInstance(currentLumpHeader.LumpNumber, reader.ReadBytes(currentLumpHeader.Length));
+            var bytes = currentLumpHeader.IsLZMACompressed() ? DecompressLZMALump(reader) : reader.ReadBytes(currentLumpHeader.Length);
+            currentLumpHeader.FourCC = new char[4];
+
+            lumps[currentLumpId] = LumpMap.GetInstance(currentLumpHeader.LumpNumber, bytes);
         }
 
         return lumps;
+    }
+
+    private byte[] DecompressLZMALump(BinaryReader reader) {
+        // skip LZMA id
+        reader.ReadBytes(4);
+
+        var actualSize = reader.ReadUInt32();
+        var lzmaSize = reader.ReadUInt32();
+
+        var properties = reader.ReadBytes(5);
+
+        // decompress the LZMA data
+        var lzmaDecoder = new SevenZip.Compression.LZMA.Decoder();
+        lzmaDecoder.SetDecoderProperties(properties);
+        var decompressedData = new byte[actualSize];
+        using (var outputStream = new MemoryStream(decompressedData)) {
+            lzmaDecoder.Code(reader.BaseStream, outputStream, lzmaSize, actualSize, null);
+        }
+
+        if (decompressedData.Length != actualSize) {
+            throw new InvalidOperationException($"Decompressed data length {decompressedData.Length} does not match expected size {actualSize}.");
+        }
+
+        return decompressedData;
     }
 }
